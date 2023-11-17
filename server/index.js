@@ -27,21 +27,26 @@ app.get("/api/get", (req, res) => {
 });
 
 app.post("/api/post", async (req, res) => {
-  const { Username, Password, Role } = await req.body;
-  console.log(req.body);
+  let { Username, Password, Role, ClubName, ClubDepartment } = await req.body;
+
+  Role === "Admin" ? (ClubName = null) : (ClubDepartment = null);
   const UserID = uuidv4();
-  console.log(UserID, req.body);
+
   const sqlInsert =
-    "INSERT INTO users (UserID,  UserName, Password, Role) VALUES (?,?,?,?)";
-  db.query(sqlInsert, [UserID, Username, Password, Role], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Error inserting values");
-    } else {
-      console.log("Values Inserted");
-      res.send("Values Inserted");
+    "INSERT INTO users (UserID,  UserName, Password, Role,  ClubName, ClubDepartment) VALUES (?,?,?,?,?,?)";
+  db.query(
+    sqlInsert,
+    [UserID, Username, Password, Role, ClubName, ClubDepartment],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error inserting values");
+      } else {
+        console.log("Values Inserted");
+        res.send("Values Inserted");
+      }
     }
-  });
+  );
 });
 
 app.post("/login", async (req, res) => {
@@ -59,8 +64,10 @@ app.post("/login", async (req, res) => {
       res.status(500).send("Internal Server Error");
     } else {
       if (result.length > 0) {
+        console.log(result[0]);
+        // console.log(result[0].UserID)
         // Login successful
-        res.status(200).send("Login successful");
+        res.status(200).send(result[0]);
       } else {
         // Incorrect username or password
         res.status(401).send("Invalid credentials");
@@ -103,12 +110,35 @@ app.put("/api/update/:id", (req, res) => {
   const { Username, Password, Role } = req.body;
   const sqlUpdate =
     "UPDATE users SET Username = ?, Password = ?, Role = ? WHERE UserID = ?";
-  // const sqlGet = "SELECT * FROM users WHERE UserID = ?";
+
   db.query(sqlUpdate, [Username, Password, Role, id], (err, result) => {
     if (err) console.log(err);
     else res.send(result);
   });
 });
+
+app.post("/api/info", (req, res) => {
+  const { name, pass, role, dept, clubname } = req.body;
+  console.log(name, pass, role, dept, clubname);
+
+  if (role === "Admin") {
+    const sqlAdmin =
+      "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubDepartment = c.Dept where u.Username=? and u.Password=?;";
+    db.query(sqlAdmin, [name, pass], (err, result) => {
+      if (err) console.log(err);
+      else res.send(result);
+    });
+  } else {
+    const sqlHead =
+      "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubName = c.ClubName where u.Username=? and u.Password=?;";
+
+    db.query(sqlHead, [name, pass], (err, result) => {
+      if (err) console.log(err);
+      else res.send(result);
+    });
+  }
+});
+
 app.listen(5000, () => {
   console.log("server is running");
 });

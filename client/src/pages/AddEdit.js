@@ -4,16 +4,22 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const initialState = {
-  UserID: "",
   Username: "",
   Password: "",
   Role: "",
+  ClubName: "",
+  ClubDepartment: "",
 };
 
 const AddEdit = () => {
   const [state, setState] = useState(initialState);
-  const { UserID, Username, Password, Role } = state;
+  const { ClubName, ClubDepartment, Username, Password, Role } = state;
+
   //   const history = useHistory();
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   const { id } = useParams();
   useEffect(() => {
@@ -23,7 +29,8 @@ const AddEdit = () => {
   }, [id]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!UserID || !Username || !Password || !Role) {
+    console.log(Username, Password, Role);
+    if (!Username || !Password || !Role) {
       toast.error("Please fill in all fields");
     } else {
       if (!id) {
@@ -67,7 +74,7 @@ const AddEdit = () => {
         }}
         onSubmit={handleSubmit}
       >
-        <label htmlFor="userid">UserId</label>
+        {/* <label htmlFor="userid">UserId</label>
         <input
           type="text"
           id="userid"
@@ -75,7 +82,7 @@ const AddEdit = () => {
           placeholder="Enter UserID"
           value={UserID || ""}
           onChange={handleInputChange}
-        />
+        /> */}
         <label htmlFor="username">Username</label>
         <input
           type="text"
@@ -95,15 +102,43 @@ const AddEdit = () => {
           onChange={handleInputChange}
         />
         <label htmlFor="role">Role</label>
-        <input
-          type="text"
-          id="role"
-          name="Role"
-          placeholder="Enter role"
-          value={Role || ""}
-          onChange={handleInputChange}
-        />
-        <input type="Submit" value={id ? "Update" : "Save"} />
+        <select name="Role" id="role" value={Role} onChange={handleInputChange}>
+          <option value="Admin">Admin</option>
+          <option value="ClubHead">ClubHead</option>
+        </select>
+
+        {Role === "ClubHead" ? (
+          <>
+            <label htmlFor="ClubName">CLubName</label>
+            <select
+              name="ClubName"
+              id="ClubName"
+              value={ClubName}
+              onChange={handleInputChange}
+            >
+              <option value="WEAL">WEAL</option>
+              <option value="NEXUS">NEXUS</option>
+              <option value="Shunya">Shunya</option>
+              <option value="Aikya">Aikya</option>
+              <option value="Embrione">Embrione</option>
+            </select>
+          </>
+        ) : Role === "Admin" ? (
+          <>
+            <label htmlFor="ClubDepartment">Department</label>
+            <select
+              name="ClubDepartment"
+              id="ClubDepartment"
+              value={ClubDepartment}
+              onChange={handleInputChange}
+            >
+              <option value="CSE">CSE</option>
+              <option value="Misc.">Misc.</option>
+            </select>
+          </>
+        ) : null}
+        <br />
+        <input type="submit" value={id ? "Update" : "Save"} />
 
         <Link to="/">
           <input type="button" value="Go back" />

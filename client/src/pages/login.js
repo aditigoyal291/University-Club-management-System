@@ -18,10 +18,24 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json()
+      console.log(data)
+
       if (response.status === 200) {
         toast.success("Login successful");
+        
+        if (data.Role === "Admin") {
+          window.location.href = `/club?name=${data.Username}&pass=${data.Password}&role=${data.Role}&dept=${data.ClubDepartment}`;
+        } else {
+          window.location.href = `/club?name=${data.Username}&pass=${data.Password}&role=${data.Role}&clubname=${data.ClubName}`;
+        }
+
+
+
+
+
         // Use React Router history to navigate to the desired route
-        window.location.href = "/"; // Replace "/" with the route you want to navigate to
+        // window.location.href = "/"; // Replace "/" with the route you want to navigate to
       } else {
         alert("Login failed");
       }
