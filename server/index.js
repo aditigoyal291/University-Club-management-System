@@ -10,7 +10,7 @@ const cors = require("cors");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "adi93066",
+  password: "nistha123",
   database: "ucms_proj",
 });
 
@@ -44,18 +44,42 @@ app.post("/api/post", async (req, res) => {
   });
 });
 
-app.get("/", (req, res) => {
-  const sqlInsert =
-    "INSERT INTO users (UserId,UserName, Password, Role) VALUES ('1','adiish', 'adi1234', 'Admin')";
-  db.query(sqlInsert, (err, result) => {
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  // Example query to check login credentials
+  const sqlLogin = `SELECT * FROM Users WHERE Username = ? AND Password = ?`;
+  
+  // Assuming you have a hashed password stored in the database
+  // You may need to hash the password provided in the request before comparing
+
+  db.query(sqlLogin, [username, password], (err, result) => {
     if (err) {
-      res.status(500).send(err);
+      console.log(err);
+      res.status(500).send("Internal Server Error");
     } else {
-      console.log("Inserted a new user into the 'users' table.");
-      res.send("Inserted a new user into the 'users' table.");
+      if (result.length > 0) {
+        // Login successful
+        res.status(200).send("Login successful");
+      } else {
+        // Incorrect username or password
+        res.status(401).send("Invalid credentials");
+      }
     }
   });
 });
+// app.get("/", (req, res) => {
+//   const sqlInsert =
+//     "INSERT INTO users (UserId,UserName, Password, Role) VALUES ('1','adiish', 'adi1234', 'Admin')";
+//   db.query(sqlInsert, (err, result) => {
+//     if (err) {
+//       res.status(500).send(err);
+//     } else {
+//       console.log("Inserted a new user into the 'users' table.");
+//       res.send("Inserted a new user into the 'users' table.");
+//     }
+//   });
+// });
 
 app.delete("/api/remove/:id", (req, res) => {
   const { id } = req.params;
