@@ -80,7 +80,7 @@ app.post("/login", async (req, res) => {
 //     "INSERT INTO users (UserId,UserName, Password, Role) VALUES ('1','adiish', 'adi1234', 'Admin')";
 //   db.query(sqlInsert, (err, result) => {
 //     if (err) {
-//       res.status(500).send(err);
+//       res.status(500).send(err );
 //     } else {
 //       console.log("Inserted a new user into the 'users' table.");
 //       res.send("Inserted a new user into the 'users' table.");
