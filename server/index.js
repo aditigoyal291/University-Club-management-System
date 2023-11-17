@@ -10,7 +10,7 @@ const cors = require("cors");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "nistha123",
+  password: "adi93066",
   database: "ucms_proj",
 });
 
@@ -49,7 +49,7 @@ app.post("/login", async (req, res) => {
 
   // Example query to check login credentials
   const sqlLogin = `SELECT * FROM Users WHERE Username = ? AND Password = ?`;
-  
+
   // Assuming you have a hashed password stored in the database
   // You may need to hash the password provided in the request before comparing
 
@@ -104,7 +104,7 @@ app.put("/api/update/:id", (req, res) => {
   const sqlUpdate =
     "UPDATE users SET Username = ?, Password = ?, Role = ? WHERE UserID = ?";
   // const sqlGet = "SELECT * FROM users WHERE UserID = ?";
-  db.query(sqlUpdate, [Username, Password, Role,id], (err, result) => {
+  db.query(sqlUpdate, [Username, Password, Role, id], (err, result) => {
     if (err) console.log(err);
     else res.send(result);
   });
