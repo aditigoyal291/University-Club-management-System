@@ -49,6 +49,38 @@ app.post("/api/post", async (req, res) => {
   );
 });
 
+// Assuming you have a Clubs table with a structure similar to this
+// CREATE TABLE Clubs (
+//   ClubID INT AUTO_INCREMENT PRIMARY KEY,
+//   ClubName VARCHAR(255) UNIQUE
+// );
+
+app.post("/api/registerEvent", (req, res) => {
+  console.log(req.body);
+  const { ClubName, EventName, Venue, Date1, Budget, PrizeMoney } = req.body;
+
+  // Generate a unique EventID using UUID
+  const EventID = uuidv4();
+
+  const sqlEvent = `
+    INSERT INTO Events (EventID, ClubName, EventName, Venue, Date, Budget, PrizeMoney)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sqlEvent,
+    [EventID, ClubName, EventName, Venue, Date1, Budget, PrizeMoney],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error registering event");
+      } else {
+        res.status(200).send("Event registered successfully");
+      }
+    }
+  );
+});
+
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -116,25 +148,71 @@ app.put("/api/update/:id", (req, res) => {
     else res.send(result);
   });
 });
+app.put("/api/updateEvent", (req, res) => {
+  // const { id } = req.params;
+  const { EventName, Budget, Date1, Venue, PrizeMoney } = req.body;
+  const sqlUpdate =
+    "UPDATE events set Budget=?,Date=?, Venue=?, PrizeMoney=? where EventName=?";
+
+  db.query(
+    sqlUpdate,
+    [Budget, Date1, Venue, PrizeMoney, EventName],
+    (err, result) => {
+      if (err) console.log(err);
+      else res.send(result);
+    }
+  );
+});
 
 app.post("/api/info", (req, res) => {
   const { name, pass, role, dept, clubname } = req.body;
   console.log(name, pass, role, dept, clubname);
 
+  let clubInformation = {
+    clubInfo: [],
+    clubEvents: [],
+  };
+
   if (role === "Admin") {
     const sqlAdmin =
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubDepartment = c.Dept where u.Username=? and u.Password=?;";
+    const sqlEvents =
+      "SELECT e.* FROM Events e JOIN Clubs c ON e.ClubName = c.ClubName WHERE c.Dept = ?;";
+
     db.query(sqlAdmin, [name, pass], (err, result) => {
       if (err) console.log(err);
-      else res.send(result);
+      else {
+        clubInformation.clubInfo = result;
+        console.log(result);
+      }
+    });
+    db.query(sqlEvents, [dept], (err, result) => {
+      if (err) console.log(err);
+      else {
+        clubInformation.clubEvents = result;
+        // console.log(clubInformation);
+        res.send(clubInformation);
+      }
     });
   } else {
     const sqlHead =
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubName = c.ClubName where u.Username=? and u.Password=?;";
+    const sqlEvents = "SELECT * FROM events WHERE ClubName =?;";
 
     db.query(sqlHead, [name, pass], (err, result) => {
       if (err) console.log(err);
-      else res.send(result);
+      else {
+        clubInformation.clubInfo = result;
+        // console.log(clubInformation);
+      }
+    });
+    db.query(sqlEvents, [clubname], (err, result) => {
+      if (err) console.log(err);
+      else {
+        clubInformation.clubEvents = result;
+        // console.log(clubInformation);
+        res.send(clubInformation);
+      }
     });
   }
 });

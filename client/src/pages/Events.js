@@ -1,51 +1,64 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams, Link, useFetcher } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const initialState = {
-  Username: "",
-  Password: "",
-  Role: "",
+  EventName: "",
+  Venue: "",
+  Date1: "",
+  Budget: "",
+  PrizeMoney: "",
   ClubName: "",
-  ClubDepartment: "",
 };
 
-const AddEdit = () => {
-  const [state, setState] = useState(initialState);
-  const { ClubName, ClubDepartment, Username, Password, Role } = state;
+const Events = () => {
+  const [stateEvent, setStateEvent] = useState(initialState);
+  const { EventName, Venue, Date1, Budget, PrizeMoney, ClubName } = stateEvent;
 
+  //   const history = useHistory();
 
   useEffect(() => {
-    console.log(state);
-  }, [state]);
+    console.log(stateEvent);
+  }, [stateEvent]);
 
   const { id } = useParams();
   useEffect(() => {
     axios.get(`http://localhost:5000/api/get/${id}`).then((response) => {
-      console.log(response.data[0]);
-      setState({ ...response.data[0] });
+      setStateEvent({ ...response.data[0] });
     });
   }, [id]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(Username, Password, Role);
-    if (!Username || !Password || !Role) {
+    const { EventName, Venue, Date1, Budget, PrizeMoney, ClubName } =
+      stateEvent;
+
+    if (!EventName || !Venue || !Date1 || !Budget || !PrizeMoney || !ClubName) {
       toast.error("Please fill in all fields");
+      return;
     } else {
       if (!id) {
         axios
-          .post("http://localhost:5000/api/post", state)
+          .post("http://localhost:5000/api/registerEvent", stateEvent)
           .then((response) => {
             //   console.log(response);
             toast.success("User added successfully");
+            setStateEvent({
+              EventName: "",
+              Venue: "",
+              Date1: "",
+              Budget: "",
+              PrizeMoney: "",
+              ClubName: "",
+            });
             // setState({ ...state, [name]: value });
           })
           .catch((err) => toast.error(err.response.data));
         //   setTimeout(() => {});
       } else {
         axios
-          .put(`http://localhost:5000/api/update/${id}`, state)
+          .put(`http://localhost:5000/api/update/${id}`, stateEvent)
           .then((response) => {
             //   console.log(response);
             toast.success("User updated successfully");
@@ -60,7 +73,7 @@ const AddEdit = () => {
     const { name, value } = e.target;
     console.log("running");
     // console.log(name, value)
-    setState({ ...state, [name]: value });
+    setStateEvent({ ...stateEvent, [name]: value });
   };
 
   return (
@@ -74,40 +87,76 @@ const AddEdit = () => {
         }}
         onSubmit={handleSubmit}
       >
-        {/* <label htmlFor="userid">UserId</label>
+        <label htmlFor="EventName">EventName</label>
         <input
           type="text"
-          id="userid"
-          name="UserID"
-          placeholder="Enter UserID"
-          value={UserID || ""}
-          onChange={handleInputChange}
-        /> */}
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="Username"
-          placeholder="Enter name"
-          value={Username || ""}
+          id="EventName"
+          name="EventName"
+          placeholder="Enter event name"
+          value={EventName || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="password">Password</label>
+        <label htmlFor="Venue">Venue</label>
         <input
           type="text"
-          id="password"
-          name="Password"
-          placeholder="Enter Password"
-          value={Password || ""}
+          id="Venue"
+          name="Venue"
+          placeholder="Enter Venue"
+          value={Venue || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="role">Role</label>
-        <select name="Role" id="role" value={Role} onChange={handleInputChange}>
-          <option value="Admin">Admin</option>
-          <option value="ClubHead">ClubHead</option>
-        </select>
+        <label htmlFor="Date1">Date</label>
+        <input
+          type="date"
+          id="Date1"
+          name="Date1"
+          placeholder="Enter Date"
+          value={Date1 || ""}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="Budget">Budget</label>
+        <input
+          type="number"
+          id="Budget"
+          name="Budget"
+          placeholder="Enter Budget"
+          value={Budget || ""}
+          onChange={handleInputChange}
+        />
 
-        {Role === "ClubHead" ? (
+        <label htmlFor="PrizeMoney">PrizeMoney</label>
+        <input
+          type="number"
+          id="PrizeMoney"
+          name="PrizeMoney"
+          placeholder="Enter PrizeMoney"
+          value={PrizeMoney || ""}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="ClubName">Club Name</label>
+        <input
+          type="text"
+          id="ClubName"
+          name="ClubName"
+          placeholder="Enter Club Name"
+          value={ClubName || ""}
+          onChange={handleInputChange}
+        />
+
+        {/* <label htmlFor="ClubName">Club</label>
+        <select
+          name="ClubName"
+          id="ClubName"
+          value={stateEvent.ClubName}
+          onChange={handleInputChange}
+        >
+          <option value="">Select Club</option>
+          <option value="WEAL">WEAL</option>
+          <option value="NEXUS">NEXUS</option>
+          <option value="Shunya">Shunya</option>
+          <option value="Aikya">Aikya</option>
+        </select> */}
+        {/* {Role === "ClubHead" ? (
           <>
             <label htmlFor="ClubName">CLubName</label>
             <select
@@ -136,7 +185,7 @@ const AddEdit = () => {
               <option value="Misc.">Misc.</option>
             </select>
           </>
-        ) : null}
+        ) : null} */}
         <br />
         <input type="submit" value={id ? "Update" : "Save"} />
 
@@ -148,4 +197,4 @@ const AddEdit = () => {
   );
 };
 
-export default AddEdit;
+export default Events;

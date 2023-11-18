@@ -56,7 +56,7 @@ const Login = () => {
           {/* <label for="username">Username:</label> */}
           <input
             type="text"
-            class="username"
+            className="username"
             name="username"
             placeholder="Username"
             value={username}
@@ -65,7 +65,7 @@ const Login = () => {
           ></input>
           <input
             type="password"
-            class="username"
+            className="username"
             name="password"
             placeholder="Password"
             value={password}
