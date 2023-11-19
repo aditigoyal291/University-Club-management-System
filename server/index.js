@@ -217,34 +217,51 @@ app.post("/api/info", (req, res) => {
   }
 });
 
-// const createTriggerQuery = `
-//     CREATE TRIGGER auto_assign_department
-//     BEFORE INSERT ON Clubs
-//     FOR EACH ROW
-//     BEGIN
-//         DECLARE club_department VARCHAR(255);
+app.post("/api/registermember", (req, res) => {
+  console.log(req.body);
+  const { ClubName, MemberName, SRN } = req.body;
 
-//         SELECT DomainName INTO club_department
-//         FROM Domain
-//         WHERE ClubID = NEW.ClubID;
+  // Generate a unique EventID using UUID
+  const MemberID = uuidv4();
 
-//         IF club_department = 'CSE' THEN
-//             SET NEW.Dept = 'CSE';
-//         ELSEIF club_department = 'AIML' THEN
-//             SET NEW.Dept = 'AIML';
-//         ELSE
-//             SET NEW.Dept = 'Misc.';
-//         END IF;
-//     END;
-// `;
+  const sqlEvent = `
+    INSERT INTO Members (ClubName, MemberName, SRN, MemberID)
+    VALUES (?, ?, ?, ?)
+  `;
 
-// db.query(createTriggerQuery, (err, result) => {
-//   if (err) {
-//     console.error("Error creating trigger:", err);
-//   } else {
-//     console.log("Trigger created successfully");
-//   }
-// });
+  db.query(sqlEvent, [ClubName, MemberName, SRN, MemberID], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error registering event");
+    } else {
+      res.status(200).send("Event registered successfully");
+    }
+  });
+});
+
+app.post("/api/post/showmember", (req, res) => {
+  const { clubname } = req.body;
+  console.log(req.body);
+  const sqlGet = "SELECT * FROM Members WHERE ClubName = ?";
+  db.query(sqlGet, [clubname], (err, result) => {
+    if (err) console.log(err);
+    else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+});
+app.put("/api/update/:id", (req, res) => {
+  const { id } = req.params;
+  const { Username, Password, Role } = req.body;
+  const sqlUpdate =
+    "UPDATE users SET Username = ?, Password = ?, Role = ? WHERE UserID = ?";
+
+  db.query(sqlUpdate, [Username, Password, Role, id], (err, result) => {
+    if (err) console.log(err);
+    else res.send(result);
+  });
+});
 
 const createTriggerQuery = `
 
@@ -277,9 +294,6 @@ db.query(
   }
 );
 
-
- 
-
 const createFunctionQuery = `
 
 
@@ -299,21 +313,23 @@ END;
 `;
 
 // Drop the existing function if it exists
-db.query(`DROP FUNCTION IF EXISTS CalculateTotalBudgetByEventName;`, (err, result) => {
-if (err) {
-  console.error("Error dropping function:", err);
-} else {
-  // Proceed to create the function after dropping (if it existed)
-  db.query(createFunctionQuery, (createErr, createResult) => {
-    if (createErr) {
-      console.error("Error creating function:", createErr);
+db.query(
+  `DROP FUNCTION IF EXISTS CalculateTotalBudgetByEventName;`,
+  (err, result) => {
+    if (err) {
+      console.error("Error dropping function:", err);
     } else {
-      console.log("Function created successfully");
+      // Proceed to create the function after dropping (if it existed)
+      db.query(createFunctionQuery, (createErr, createResult) => {
+        if (createErr) {
+          console.error("Error creating function:", createErr);
+        } else {
+          console.log("Function created successfully");
+        }
+      });
     }
-  });
-}
-});
-
+  }
+);
 
 app.listen(5000, () => {
   console.log("server is running");

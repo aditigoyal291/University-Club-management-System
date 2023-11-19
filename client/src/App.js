@@ -9,6 +9,7 @@ import Login from "./pages/login";
 import Users from "./pages/Users";
 import Club from "./pages/Club";
 import Events from "./pages/Events";
+import Members from "./pages/Members";
 
 const App = () => {
   return (
@@ -26,6 +27,8 @@ const App = () => {
             <Route path="/login" Component={Login}></Route>
             <Route path="/club" Component={Club}></Route>
             <Route path="/events" Component={Events}></Route>
+            <Route path="/member" Component={Members}></Route>
+            {/* <Route path="/" Component={Events}></Route> */}
           </Routes>
         </BrowserRouter>
       </div>

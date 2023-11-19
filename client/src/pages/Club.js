@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, json } from "react-router-dom";
 import { toast } from "react-toastify";
 function Club() {
   const [searchParams, setSearchParams] = useSearchParams(); // Get a specific query parameter
@@ -23,6 +23,51 @@ function Club() {
     PrizeMoney: "",
     ClubName: ClubName,
   });
+
+  const [memberInfo, setMemberInfo] = useState([]);
+
+  useEffect(() => {
+    const getInfoMember = async () => {
+      console.log("i am running");
+      // console.log(MemberName, SRN, ClubName);
+      axios
+        .post("http://localhost:5000/api/post/showmember", {
+          clubname: stateMember.ClubName,
+        })
+        .then((response) => {
+          setMemberInfo(response.data);
+          console.log(response.data);
+        })
+        .catch((err) => console.log(err.response.data));
+    };
+    getInfoMember();
+  }, []);
+
+  const [stateMember, setStateMember] = useState({
+    MemberName: "",
+    SRN: "",
+    ClubName: ClubName,
+  });
+
+  useEffect(() => {
+    console.log(stateMember);
+    const getInfo = async () => {
+      //   console.log("i am running");
+      // console.log(MemberName, SRN, ClubName);
+      axios
+        .post("http://localhost:5000/api/info", {
+          name: stateMember.MemberName,
+          pass: stateMember.SRN,
+          clubname: stateMember.ClubName,
+        })
+        .then((response) => {
+          setClubInfo(response.data);
+          console.log(response.data);
+        })
+        .catch((err) => console.log(err.response.data));
+    };
+    getInfo();
+  }, []);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -74,7 +119,6 @@ function Club() {
         });
       })
       .catch((err) => toast.error(err.response.data));
-    //   setTimeout(() => {});
   };
 
   const handleEventInputChange = (e) => {
@@ -82,9 +126,15 @@ function Club() {
     setEventInfo({ ...eventInfo, [name]: value });
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    console.log("running");
+    setStateMember((prev) => ({ ...prev, [name]: value }));
+  };
   useEffect(() => {
-    console.log(eventInfo);
-  }, [eventInfo]);
+    console.log(stateMember);
+  }, [stateMember]);
 
   const handleEventEdit = (event) => {
     setPage(3);
@@ -101,7 +151,6 @@ function Club() {
   };
 
   const handleEventUpdate = (eventInfo) => {
-    // e.preventDefault();
     const { EventName, Venue, Date1, Budget, PrizeMoney, ClubName } = eventInfo;
 
     if (!EventName || !Venue || !Date1 || !Budget || !PrizeMoney || !ClubName) {
@@ -111,21 +160,44 @@ function Club() {
       axios
         .put(`http://localhost:5000/api/updateEvent`, eventInfo)
         .then((response) => {
-          //   console.log(response);
           toast.success("User updated successfully");
-          // setState({ ...state, [name]: value });
         })
         .catch((err) => toast.error(err.response.data));
-      //   setTimeout(() => {});
     }
-    // [eventInfo.EventName, eventInfo.Venue, eventInfo.Date1, eventInfo.Budget, eventInfo.PrizeMoney, eventInfo.ClubName] = [event.EventName, event.Venue, event.Date.split("T")[0], event.Budget, event.PrizeMoney, event.ClubName]
-    // console.log(event);
   };
+
+  const handleMemberSubmit = (e) => {
+    e.preventDefault();
+
+    if (!stateMember.MemberName || !stateMember.ClubName || !stateMember.SRN) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    axios
+      .post("http://localhost:5000/api/registermember", stateMember)
+      .then((response) => {
+        toast.success("User added successfully");
+        setStateMember({
+          MemberName: "",
+          SRN: "",
+          ClubName: ClubName,
+        });
+      })
+      .catch((err) => toast.error(err.response.data));
+  };
+
   if (page === 1) {
     return (
       <>
         <div>
-          {ClubName}
+          <button
+            onClick={() => {
+              setPage(4);
+            }}
+          >
+            {ClubName}
+          </button>
           <br />
           {ClubDepartment}
           <br />
@@ -310,8 +382,70 @@ function Club() {
         </div>
       </>
     );
-  } else {
-    return <>page 4</>;
+  } else if (page === 4) {
+    return (
+      <>
+        page 4
+        <br />
+        {ClubName}
+        <br />
+        {JSON.stringify(memberInfo)}
+        <button onClick={() => setPage(5)}>Add Members</button>
+      
+      </>
+    );
+  } else if (page === 5) {
+    return (
+      <>
+        page 5
+        <div style={{ marginTop: "100px" }}>
+          <form
+            style={{
+              margin: "auto",
+              padding: "15px",
+              maxWidth: "400px",
+              alignContent: "center",
+            }}
+            onSubmit={handleMemberSubmit}
+          >
+            <label htmlFor="MemberName">MemberName</label>
+            <input
+              type="text"
+              id="MemberName"
+              name="MemberName"
+              placeholder="Enter Membr name"
+              value={stateMember.MemberName || ""}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="SRN">SRN</label>
+            <input
+              type="text"
+              id="SRN"
+              name="SRN"
+              placeholder="Enter SRN"
+              value={stateMember.SRN || ""}
+              onChange={handleInputChange}
+            />
+
+            <label htmlFor="ClubName">Club Name</label>
+            <input
+              type="text"
+              id="ClubName"
+              disabled
+              name="ClubName"
+              placeholder="Enter Club Name"
+              value={stateMember.ClubName}
+              onChange={handleInputChange}
+            />
+
+            <br />
+
+            <input type="submit" value={"Save"} />
+            <button onClick={() => setPage(1)}>Go back</button>
+          </form>
+        </div>
+      </>
+    );
   }
 }
 export default Club;
