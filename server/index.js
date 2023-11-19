@@ -217,6 +217,104 @@ app.post("/api/info", (req, res) => {
   }
 });
 
+// const createTriggerQuery = `
+//     CREATE TRIGGER auto_assign_department
+//     BEFORE INSERT ON Clubs
+//     FOR EACH ROW
+//     BEGIN
+//         DECLARE club_department VARCHAR(255);
+
+//         SELECT DomainName INTO club_department
+//         FROM Domain
+//         WHERE ClubID = NEW.ClubID;
+
+//         IF club_department = 'CSE' THEN
+//             SET NEW.Dept = 'CSE';
+//         ELSEIF club_department = 'AIML' THEN
+//             SET NEW.Dept = 'AIML';
+//         ELSE
+//             SET NEW.Dept = 'Misc.';
+//         END IF;
+//     END;
+// `;
+
+// db.query(createTriggerQuery, (err, result) => {
+//   if (err) {
+//     console.error("Error creating trigger:", err);
+//   } else {
+//     console.log("Trigger created successfully");
+//   }
+// });
+
+const createTriggerQuery = `
+
+CREATE TRIGGER enforce_role_assignment
+BEFORE INSERT ON Users
+FOR EACH ROW
+BEGIN
+    IF NEW.Role NOT IN ('Admin', 'ClubHead') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid role assignment';
+    END IF;
+END;
+`;
+
+db.query(
+  `DROP TRIGGER IF EXISTS enforce_role_assignment`,
+  (dropErr, dropResult) => {
+    if (dropErr) {
+      console.error("Error dropping trigger:", dropErr);
+    } else {
+      // Trigger dropped successfully or not present, proceed to create
+      db.query(createTriggerQuery, (createErr, createResult) => {
+        if (createErr) {
+          console.error("Error creating trigger:", createErr);
+        } else {
+          console.log("Trigger created successfully");
+        }
+      });
+    }
+  }
+);
+
+
+ 
+
+const createFunctionQuery = `
+
+
+CREATE FUNCTION CalculateTotalBudgetByEventName(EventName VARCHAR(255))
+RETURNS DECIMAL(10, 2)
+READS SQL DATA
+BEGIN
+    DECLARE total_budget DECIMAL(10, 2);
+
+    SELECT SUM(Budget) INTO total_budget
+    FROM Events
+    WHERE EventName = EventName;
+
+    RETURN total_budget;
+END;
+
+`;
+
+// Drop the existing function if it exists
+db.query(`DROP FUNCTION IF EXISTS CalculateTotalBudgetByEventName;`, (err, result) => {
+if (err) {
+  console.error("Error dropping function:", err);
+} else {
+  // Proceed to create the function after dropping (if it existed)
+  db.query(createFunctionQuery, (createErr, createResult) => {
+    if (createErr) {
+      console.error("Error creating function:", createErr);
+    } else {
+      console.log("Function created successfully");
+    }
+  });
+}
+});
+
+
 app.listen(5000, () => {
   console.log("server is running");
 });

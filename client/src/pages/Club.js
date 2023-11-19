@@ -102,8 +102,7 @@ function Club() {
 
   const handleEventUpdate = (eventInfo) => {
     // e.preventDefault();
-    const { EventName, Venue, Date1, Budget, PrizeMoney, ClubName } =
-      eventInfo;
+    const { EventName, Venue, Date1, Budget, PrizeMoney, ClubName } = eventInfo;
 
     if (!EventName || !Venue || !Date1 || !Budget || !PrizeMoney || !ClubName) {
       toast.error("Please fill in all fields");
@@ -134,17 +133,28 @@ function Club() {
           <br />
           {Pass}
           <br />
-          {/* {JSON.stringify(clubInfo)} */}
-          {JSON.stringify(clubInfo.clubEvents)}
+          {JSON.stringify(clubInfo)}
+          {/* {JSON.stringify(clubInfo.clubEvents)} */}
           {Role === "ClubHead" && (
             <button onClick={() => setPage(2)}>Add Event</button>
           )}
+
+          {/* {Role === "Admin" && (
+            <>
+              {clubInfo.clubInfo.map((club) => (
+                <>
+                {JSON.stringify(club)}
+                </>
+              ))}
+            </>
+          )} */}
+          <></>
         </div>
 
         <div>
           {clubInfo.clubEvents.map((event) => (
             <div key={event.EventID}>
-              {event.EventName} {event.Date}
+              {/* {event.EventName} {event.Date} */}
               {Role !== "Admin" && (
                 <button onClick={() => handleEventEdit(event)}>
                   Edit Event

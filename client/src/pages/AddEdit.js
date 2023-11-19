@@ -15,7 +15,6 @@ const AddEdit = () => {
   const [state, setState] = useState(initialState);
   const { ClubName, ClubDepartment, Username, Password, Role } = state;
 
-
   useEffect(() => {
     console.log(state);
   }, [state]);
@@ -101,11 +100,21 @@ const AddEdit = () => {
           value={Password || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="role">Role</label>
+        <label htmlFor="role">ROLE</label>
+        <input
+          type="text"
+          id="role"
+          name="Role"
+          placeholder="Enter Role"
+          value={Role || ""}
+          onChange={handleInputChange}
+        />
+        {/* <label htmlFor="role">Role</label>
         <select name="Role" id="role" value={Role} onChange={handleInputChange}>
           <option value="Admin">Admin</option>
           <option value="ClubHead">ClubHead</option>
-        </select>
+          <option value="ClubHead">CoreMember</option>
+        </select> */}
 
         {Role === "ClubHead" ? (
           <>
