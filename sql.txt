@@ -8,7 +8,7 @@ CREATE TABLE Users (
     ClubDepartment ENUM('CSE','Misc.','AIML') default null,
 	Username VARCHAR(255) NOT NULL,    
 	Password VARCHAR(255) NOT NULL,    
-	Role ENUM('Admin', 'ClubHead', 'CoreMember') NOT NULL
+	Role ENUM('Admin', 'ClubHead') NOT NULL
 );
 
 CREATE TABLE Clubs (
@@ -20,7 +20,7 @@ CREATE TABLE Clubs (
     primary key(ClubID,ClubName)
     );
     
-Alter table users add foreign key (ClubName) references clubs(ClubName) on delete cascade;
+Alter table Users add foreign key (ClubName) references clubs(ClubName) on delete cascade;
 CREATE TABLE UserClub (
     UserID VARCHAR(255),
     ClubID VARCHAR(255),
@@ -53,8 +53,12 @@ CREATE TABLE Members(
 	MemberID VARCHAR(255) NOT NULL,
     MemberName VARCHAR(255),
     ClubID VARCHAR(255),
-    DomainID VARCHAR(255),
+    ClubName VARCHAR(255),
+    
+  --   DomainID VARCHAR(255),
     SRN VARCHAR(20),
     FOREIGN KEY (ClubID) REFERENCES Clubs(ClubID),
-    FOREIGN KEY (DomainID) REFERENCES Domain(DomainID)
+    FOREIGN KEY (ClubName) REFERENCES Clubs(ClubName)
+    
+    -- FOREIGN KEY (DomainID) REFERENCES Domain(DomainID)
 );

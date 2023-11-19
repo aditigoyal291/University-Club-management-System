@@ -28,6 +28,7 @@ function Club() {
 
   useEffect(() => {
     const getInfoMember = async () => {
+      console.log(memberInfo)
       console.log("i am running");
       // console.log(MemberName, SRN, ClubName);
       axios
@@ -391,7 +392,7 @@ function Club() {
         <br />
         {JSON.stringify(memberInfo)}
         <button onClick={() => setPage(5)}>Add Members</button>
-      
+        {/* {JSON.stringify(stateMember)} */}
       </>
     );
   } else if (page === 5) {
