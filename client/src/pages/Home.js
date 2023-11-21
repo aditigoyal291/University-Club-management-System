@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useParams, Link} from "react-router-dom";
 import axios from "axios";
 import "./Home.css";
 import Logo from "./club.png"
 import second from "./1.png"
+
 const Home = () => {
   const [clubEventInfo, setClubEventInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -39,7 +40,10 @@ const Home = () => {
         <Link to="/signup">
           <button class="button">SignUp</button>
         </Link>
-        {JSON.stringify(clubEventInfo)}
+        </div>
+          <img src={second} id="sec"></img>
+      </div>
+      {/* {JSON.stringify(clubEventInfo)} */}
         {/* <button onClick={fetchData}>Fetch Data</button>{" "} */}
         {/* Example button to trigger API call */}
         <h1>Club and Event Information</h1>
@@ -50,14 +54,6 @@ const Home = () => {
             <p>Total Events: {clubEventInfo[0].TotalEvents}</p>
           </div>
         )}
-        </div>
-        <div>
-
-        </div>
-        <img src={second} id="sec"></img>
-      </div>
-
-
     </body>
   );
 };
