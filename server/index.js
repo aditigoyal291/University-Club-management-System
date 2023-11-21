@@ -1,5 +1,3 @@
-// import { v4 as uuidv4 } from "uuid";
-// uuidv4();
 const { v4: uuidv4 } = require("uuid");
 const express = require("express");
 const app = express();
@@ -10,7 +8,7 @@ const cors = require("cors");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "nistha123",
+  password: "adi93066",
   database: "ucms_proj",
 });
 
@@ -83,7 +81,7 @@ app.post("/api/registerEvent", (req, res) => {
 app.post("/api/registerdomain", (req, res) => {
   console.log(req.body);
   const { ClubName, DomainName } = req.body;
-  // Generate a unique EventID using UUID
+
   const DomainID = uuidv4();
   const sqlDomain = `
   INSERT INTO domain (ClubName, DomainID, DomainName)
@@ -349,13 +347,13 @@ CREATE FUNCTION CalculateTotalBudgetByEventName(EventName VARCHAR(255))
 RETURNS DECIMAL(10, 2)
 READS SQL DATA
 BEGIN
-    DECLARE total_budget DECIMAL(10, 2)
+    DECLARE total_budget DECIMAL(10, 2);
 
     SELECT SUM(Budget) INTO total_budget
     FROM Events
-    WHERE EventName = EventName
+    WHERE EventName = EventName;
 
-    RETURN total_budget
+    RETURN total_budget;
 END;
 
 `;
