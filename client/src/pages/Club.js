@@ -76,26 +76,26 @@ function Club() {
     getInfo();
   }, []);
 
-                                                                      useEffect(() => {
-                                                                        const getInfo = async () => {
-                                                                          //   console.log("i am running");
-                                                                          console.log(ClubName, ClubDepartment, Name, Pass, Role);
-                                                                          axios
-                                                                            .post("http://localhost:5000/api/info", {
-                                                                              name: Name,
-                                                                              pass: Pass,
-                                                                              role: Role,
-                                                                              dept: ClubDepartment,
-                                                                              clubname: ClubName,
-                                                                            })
-                                                                            .then((response) => {
-                                                                              setClubInfo(response.data);
-                                                                              console.log(response.data);
-                                                                            })
-                                                                            .catch((err) => console.log(err.response.data));
-                                                                        };
-                                                                        getInfo();
-                                                                      }, []);
+  useEffect(() => {
+    const getInfo = async () => {
+      //   console.log("i am running");
+      console.log(ClubName, ClubDepartment, Name, Pass, Role);
+      axios
+        .post("http://localhost:5000/api/info", {
+          name: Name,
+          pass: Pass,
+          role: Role,
+          dept: ClubDepartment,
+          clubname: ClubName,
+        })
+        .then((response) => {
+          setClubInfo(response.data);
+          console.log(response.data);
+        })
+        .catch((err) => console.log(err.response.data));
+    };
+    getInfo();
+  }, []);
 
   const handleEventSubmit = (e) => {
     e.preventDefault();
@@ -228,25 +228,26 @@ function Club() {
     return (
       <>
         <div>
-          {Role==='ClubHead' &&
-          <button
-          onClick={() => {
-            setPage(4);
-          }}
-          >
-            {ClubName}
-          </button>
-          }
+          {Role === "ClubHead" && (
+            <button
+              onClick={() => {
+                setPage(4);
+              }}
+            >
+              {ClubName}
+            </button>
+          )}
           <div class="navbar">
-          {/* <div>{ClubDepartment}</div> */}
-          <div id="namae">Hi, {Name}</div>
-          <div id="depart">Department: {ClubDepartment}</div>
+            {/* <div>{ClubDepartment}</div> */}
+            <div id="namae">Hi, {Name}</div>
+            <div id="depart">Department: {ClubDepartment}</div>
           </div>
           <br />
           {Pass}
           <br />
-          {JSON.stringify(clubInfo)}
-          {/* {JSON.stringify(clubInfo.clubEvents)} */}
+          {JSON.stringify(clubInfo.clubInfo)}
+          <br />
+          {JSON.stringify(clubInfo.clubEvents)}
           {Role === "ClubHead" && (
             <button onClick={() => setPage(2)}>Add Event</button>
           )}
