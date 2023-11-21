@@ -76,10 +76,9 @@ const Login = () => {
           <button id="button" onClick={handleLogin} type="submit">
             Login
           </button>
+          <h3 id="h3">Don't have an account? <Link to='/signup'>Sign Up</Link></h3>
         </form>
-  
-    <h3>Don't have an account? <Link to='/'>Sign Up</Link></h3>
-    </div>
+      </div>
     </div>
   );
 };

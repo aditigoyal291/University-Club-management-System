@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Home.css";
+import Logo from "./club.png"
+import second from "./1.png"
 const Home = () => {
   const [clubEventInfo, setClubEventInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -26,14 +28,16 @@ const Home = () => {
     fetchData();
   }, []);
   return (
-    <>
-      <div className="main-div">
-        <h1>Home</h1>
+    <body>
+      <div id="outerdiv">
+        <div id="navbar"> 
+        <img src={Logo} id="logo"></img>
+        <p>UCMS</p>
         <Link to="/login">
-          <button>Login</button>
+          <button class="button">Login</button>
         </Link>
         <Link to="/signup">
-          <button>SignUp</button>
+          <button class="button">SignUp</button>
         </Link>
         {JSON.stringify(clubEventInfo)}
         {/* <button onClick={fetchData}>Fetch Data</button>{" "} */}
@@ -46,8 +50,15 @@ const Home = () => {
             <p>Total Events: {clubEventInfo[0].TotalEvents}</p>
           </div>
         )}
+        </div>
+        <div>
+
+        </div>
+        <img src={second} id="sec"></img>
       </div>
-    </>
+
+
+    </body>
   );
 };
 

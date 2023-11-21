@@ -1,0 +1,20 @@
+.navbar{
+    display: flex;
+    flex-direction:row;
+    /* gap:1rem; */
+    background-color: antiquewhite;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#namae{
+    font-size:6rem;
+    font-weight:bold;
+    padding-right: 14rem;
+}
+
+#depart{
+    font-size: 2rem;
+    padding-left: 40rem;
+}

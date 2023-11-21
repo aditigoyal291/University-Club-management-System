@@ -8,7 +8,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;  
-    gap: 2rem;  
+    /* gap: 0.5rem;   */
     /* background-color: burlywood; */
 }
 #heading{
@@ -21,7 +21,7 @@
     border-radius: 1rem; */
 }
 
-.username{
+.username,.password,.role{
     padding: 1rem;
     width: 20rem;
     border-radius: 0.5rem;
@@ -35,19 +35,13 @@ border: 1px solid black;
 padding: 4rem;
 }
 
-#button{
+.button{
     padding: 1rem;
     width: 8rem;
-    background-color: rgb(222, 139, 38);
+    background-color: #de9126;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: large;
-}
-
-#h3{
-    padding: 0.5rem;
-    background-color: antiquewhite;
-    border-radius: 0.5rem;
 }
