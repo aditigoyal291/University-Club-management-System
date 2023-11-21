@@ -238,26 +238,46 @@ function Club() {
           </button>
           } */}
           <div class="navbar">
-          {/* <div>{ClubDepartment}</div> */}
-          <div id="namae">Hi, {Name}</div>
-          {Role==='ClubHead' &&
-            <div class="depart">Club: {ClubName}</div>
-          }
-          {Role==='Admin' &&
-            <div class="depart">Department: {ClubDepartment}</div>
-          }
+            {/* <div>{ClubDepartment}</div> */}
+            <div id="namae">Hi, {Name}</div>
+            {Role === "ClubHead" && <div class="depart">Club: {ClubName}</div>}
+            {Role === "Admin" && (
+              <div class="depart">Department: {ClubDepartment}</div>
+            )}
           </div>
 
           {Role === "ClubHead" && (
-          <button onClick={() => setPage(2)} class="btn">Add Event</button>
+            <button onClick={() => setPage(2)} class="btn">
+              Add Event
+            </button>
           )}
           {Role === "ClubHead" && (
-          <button onClick={() => {setPage(4);}} class="btn">Add members</button>
+            <button
+              onClick={() => {
+                setPage(4);
+              }}
+              class="btn"
+            >
+              Add members
+            </button>
           )}
           <br></br>
+          {/* {JSON.stringify(clubInfo)} */}
           {JSON.stringify(clubInfo)}
+          {clubInfo.clubEvents.map((item) => (
+            <div>
+              {item.ClubName}
+              <br />
+              {item.EventName}
+              <br />
+              {item.Venue}
+              <br />
+              {item.Budget}
+              <br />
+              {item.PrizeMoney}
+            </div>
+          ))}
           {/* {JSON.stringify(clubInfo.clubEvents)} */}
-
 
           {/* {Role === "Admin" && (
             <>
