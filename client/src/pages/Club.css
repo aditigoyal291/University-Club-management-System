@@ -4,17 +4,32 @@
     /* gap:1rem; */
     background-color: antiquewhite;
     width: 100%;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
+    /* padding: 3rem; */
 }
 
 #namae{
     font-size:6rem;
     font-weight:bold;
-    padding-right: 14rem;
+    padding-left: 4rem;
 }
 
-#depart{
+.depart{
     font-size: 2rem;
-    padding-left: 40rem;
+    padding-left: 45rem;
+    font-weight: bold;
+}
+
+.btn{
+    padding: 1rem;
+    width: 10rem;
+    background-color: #de9126;
+    color: #fff;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: large;
+    font-weight: bold;
+    margin: 2rem;
 }
