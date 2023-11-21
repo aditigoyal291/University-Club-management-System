@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSearchParams, Link, json } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 function Club() {
   const [searchParams, setSearchParams] = useSearchParams(); // Get a specific query parameter
@@ -28,7 +28,7 @@ function Club() {
 
   useEffect(() => {
     const getInfoMember = async () => {
-      console.log(memberInfo)
+      // console.log(memberInfo);
       console.log("i am running");
       // console.log(MemberName, SRN, ClubName);
       axios
@@ -50,8 +50,12 @@ function Club() {
     ClubName: ClubName,
   });
 
+  const [stateDomain, setStateDomain] = useState({
+    ClubName: ClubName,
+    DomainName: "",
+  });
   useEffect(() => {
-    console.log(stateMember);
+    // console.log(stateMember);
     const getInfo = async () => {
       //   console.log("i am running");
       // console.log(MemberName, SRN, ClubName);
@@ -63,33 +67,33 @@ function Club() {
         })
         .then((response) => {
           setClubInfo(response.data);
-          console.log(response.data);
+          console.log(response);
         })
         .catch((err) => console.log(err.response.data));
     };
     getInfo();
   }, []);
 
-  useEffect(() => {
-    const getInfo = async () => {
-      //   console.log("i am running");
-      console.log(ClubName, ClubDepartment, Name, Pass, Role);
-      axios
-        .post("http://localhost:5000/api/info", {
-          name: Name,
-          pass: Pass,
-          role: Role,
-          dept: ClubDepartment,
-          clubname: ClubName,
-        })
-        .then((response) => {
-          setClubInfo(response.data);
-          console.log(response.data);
-        })
-        .catch((err) => console.log(err.response.data));
-    };
-    getInfo();
-  }, []);
+                                                                      useEffect(() => {
+                                                                        const getInfo = async () => {
+                                                                          //   console.log("i am running");
+                                                                          console.log(ClubName, ClubDepartment, Name, Pass, Role);
+                                                                          axios
+                                                                            .post("http://localhost:5000/api/info", {
+                                                                              name: Name,
+                                                                              pass: Pass,
+                                                                              role: Role,
+                                                                              dept: ClubDepartment,
+                                                                              clubname: ClubName,
+                                                                            })
+                                                                            .then((response) => {
+                                                                              setClubInfo(response.data);
+                                                                              console.log(response.data);
+                                                                            })
+                                                                            .catch((err) => console.log(err.response.data));
+                                                                        };
+                                                                        getInfo();
+                                                                      }, []);
 
   const handleEventSubmit = (e) => {
     e.preventDefault();
@@ -137,6 +141,16 @@ function Club() {
     console.log(stateMember);
   }, [stateMember]);
 
+  const handleInputDomainChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    console.log("running");
+    setStateDomain((prev) => ({ ...prev, [name]: value }));
+  };
+  useEffect(() => {
+    console.log(stateDomain);
+  }, [stateDomain]);
+
   const handleEventEdit = (event) => {
     setPage(3);
     setEventInfo({
@@ -167,6 +181,26 @@ function Club() {
     }
   };
 
+  const handleDomainSubmit = (e) => {
+    e.preventDefault();
+
+    if (!stateDomain.DomainName) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    axios
+      .post("http://localhost:5000/api/registerdomain", stateDomain)
+      .then((response) => {
+        toast.success("User added successfully");
+        setStateMember({
+          DomainName: "",
+          ClubName: ClubName,
+        });
+      })
+      .catch((err) => toast.error(err.response.data));
+  };
+
   const handleMemberSubmit = (e) => {
     e.preventDefault();
 
@@ -192,13 +226,15 @@ function Club() {
     return (
       <>
         <div>
-          <button
-            onClick={() => {
-              setPage(4);
-            }}
-          >
-            {ClubName}
-          </button>
+          {Role === "ClubHead" && (
+            <button
+              onClick={() => {
+                setPage(4);
+              }}
+            >
+              {ClubName}
+            </button>
+          )}
           <br />
           {ClubDepartment}
           <br />
@@ -393,6 +429,42 @@ function Club() {
         {JSON.stringify(memberInfo)}
         <button onClick={() => setPage(5)}>Add Members</button>
         {/* {JSON.stringify(stateMember)} */}
+        <div style={{ marginTop: "100px" }}>
+          <form
+            style={{
+              margin: "auto",
+              padding: "15px",
+              maxWidth: "400px",
+              alignContent: "center",
+            }}
+            onSubmit={handleDomainSubmit}
+          >
+            <label htmlFor="DomainName">DomainName</label>
+            <input
+              type="text"
+              id="DomainName"
+              name="DomainName"
+              placeholder="Enter Domain name"
+              value={stateDomain.DomainName || ""}
+              onChange={handleInputDomainChange}
+            />
+            <br />
+            <label htmlFor="ClubName">Club Name</label>
+            <input
+              type="text"
+              id="ClubName"
+              disabled
+              name="ClubName"
+              placeholder="Enter Club Name"
+              value={stateDomain.ClubName}
+              onChange={handleInputChange}
+            />
+            <br />
+
+            <input type="submit" value={"Save"} />
+            <button onClick={() => setPage(1)}>Go back</button>
+          </form>
+        </div>
       </>
     );
   } else if (page === 5) {

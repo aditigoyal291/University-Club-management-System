@@ -80,6 +80,25 @@ app.post("/api/registerEvent", (req, res) => {
     }
   );
 });
+app.post("/api/registerdomain", (req, res) => {
+  console.log(req.body);
+  const { ClubName, DomainName } = req.body;
+  // Generate a unique EventID using UUID
+  const DomainID = uuidv4();
+  const sqlDomain = `
+  INSERT INTO domain (ClubName, DomainID, DomainName)
+  VALUES (?, ?, ?)
+  `;
+
+  db.query(sqlDomain, [ClubName, DomainID, DomainName], (err, response) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error registering event");
+    } else {
+      res.status(200).send("Event registered successfully");
+    }
+  });
+});
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -177,7 +196,8 @@ app.post("/api/info", (req, res) => {
     const sqlAdmin =
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubDepartment = c.Dept where u.Username=? and u.Password=?;";
     const sqlEvents =
-      "SELECT e.* FROM Events e JOIN Clubs c ON e.ClubName = c.ClubName WHERE c.Dept = ?;";
+      // "SELECT e.* FROM Events e JOIN Clubs c ON e.ClubName = c.ClubName WHERE c.Dept = ?;";
+    "SELECT e.* FROM Events e WHERE e.ClubName IN (SELECT c.ClubName FROM Clubs c WHERE c.Dept = ?)";
 
     db.query(sqlAdmin, [name, pass], (err, result) => {
       if (err) console.log(err);
@@ -217,6 +237,21 @@ app.post("/api/info", (req, res) => {
   }
 });
 
+app.get("/api/adminClubInfo", (req, res) => {
+
+  const sqlCount =
+    "SELECT COUNT(DISTINCT c.ClubName) AS TotalDistinctClubs, COUNT(e.EventID) AS TotalEvents FROM Clubs c LEFT JOIN Events e ON c.ClubName = e.ClubName;";
+
+  db.query(sqlCount, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Error fetching data from the database");
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.post("/api/registermember", (req, res) => {
   console.log(req.body);
   const { ClubName, MemberName, SRN } = req.body;
@@ -251,6 +286,19 @@ app.post("/api/post/showmember", (req, res) => {
     }
   });
 });
+// app.post("/api/post/showdomain", (req, res) => {
+//   const { clubname,DomainName } = req.body;
+//   console.log(req.body);
+//   const sqlGet =
+//     " SELECT DomainName FROM Domain where ClubID=(SELECT ClubID FROM Clubs where ClubName=?);";
+//   db.query(sqlGet, [clubname,DomainName], (err, result) => {
+//     if (err) console.log(err);
+//     else {
+//       console.log(result);
+//       res.send(result);
+//     }
+//   });
+// });
 app.put("/api/update/:id", (req, res) => {
   const { id } = req.params;
   const { Username, Password, Role } = req.body;
@@ -301,13 +349,13 @@ CREATE FUNCTION CalculateTotalBudgetByEventName(EventName VARCHAR(255))
 RETURNS DECIMAL(10, 2)
 READS SQL DATA
 BEGIN
-    DECLARE total_budget DECIMAL(10, 2);
+    DECLARE total_budget DECIMAL(10, 2)
 
     SELECT SUM(Budget) INTO total_budget
     FROM Events
-    WHERE EventName = EventName;
+    WHERE EventName = EventName
 
-    RETURN total_budget;
+    RETURN total_budget
 END;
 
 `;
