@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useParams, Link, useFetcher } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import "./AddEdit.css";
 
 const initialState = {
   Username: "",
@@ -63,59 +64,40 @@ const AddEdit = () => {
   };
 
   return (
-    <div style={{ marginTop: "100px" }}>
-      <form
-        style={{
-          margin: "auto",
-          padding: "15px",
-          maxWidth: "400px",
-          alignContent: "center",
-        }}
-        onSubmit={handleSubmit}
-      >
-        {/* <label htmlFor="userid">UserId</label>
+    <div id="outerdiv">
+    <h1 id="heading">SignUp</h1>
+      <h2>
+        Wanna catch up with the latest activities in college? We got you!!!
+      </h2>
+    <div id="cover">
+      <form id="form" onSubmit={handleSubmit}>
+        <label htmlFor="username"></label>
         <input
           type="text"
-          id="userid"
-          name="UserID"
-          placeholder="Enter UserID"
-          value={UserID || ""}
-          onChange={handleInputChange}
-        /> */}
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
+          class="username"
           name="Username"
           placeholder="Enter name"
           value={Username || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password"></label>
         <input
           type="text"
-          id="password"
+          class="password"
           name="Password"
           placeholder="Enter Password"
           value={Password || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="role">ROLE</label>
+        <label htmlFor="role"></label>
         <input
           type="text"
-          id="role"
+          class="role"
           name="Role"
           placeholder="Enter Role"
           value={Role || ""}
           onChange={handleInputChange}
         />
-        {/* <label htmlFor="role">Role</label>
-        <select name="Role" id="role" value={Role} onChange={handleInputChange}>
-          <option value="Admin">Admin</option>
-          <option value="ClubHead">ClubHead</option>
-          <option value="ClubHead">CoreMember</option>
-        </select> */}
-
         {Role === "ClubHead" ? (
           <>
             <label htmlFor="ClubName">CLubName</label>
@@ -134,10 +116,11 @@ const AddEdit = () => {
           </>
         ) : Role === "Admin" ? (
           <>
-            <label htmlFor="ClubDepartment">Department</label>
+            <label htmlFor="ClubDepartment" style={{fontSize:"2rem"}}>Department</label>
             <select
               name="ClubDepartment"
               id="ClubDepartment"
+              style={{width:"22rem",padding:"1rem",borderRadius:"0.5rem"}}
               value={ClubDepartment}
               onChange={handleInputChange}
             >
@@ -147,12 +130,13 @@ const AddEdit = () => {
           </>
         ) : null}
         <br />
-        <input type="submit" value={id ? "Update" : "Save"} />
+        <input type="submit" class="button" value={id ? "Update" : "Save"} />
 
         <Link to="/">
-          <input type="button" value="Go back" />
+          <input type="button" class="button" value="Go back" />
         </Link>
       </form>
+    </div>
     </div>
   );
 };

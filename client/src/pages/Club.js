@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams, Link, json } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./Club.css";
+
 function Club() {
   const [searchParams, setSearchParams] = useSearchParams(); // Get a specific query parameter
   const ClubName = searchParams.get("clubname");
@@ -192,17 +194,20 @@ function Club() {
     return (
       <>
         <div>
+          {Role==='ClubHead' &&
           <button
-            onClick={() => {
-              setPage(4);
-            }}
+          onClick={() => {
+            setPage(4);
+          }}
           >
             {ClubName}
           </button>
-          <br />
-          {ClubDepartment}
-          <br />
-          {Name}
+          }
+          <div class="navbar">
+          {/* <div>{ClubDepartment}</div> */}
+          <div id="namae">Hi, {Name}</div>
+          <div id="depart">Department: {ClubDepartment}</div>
+          </div>
           <br />
           {Pass}
           <br />
