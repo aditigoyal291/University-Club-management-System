@@ -1,8 +1,39 @@
-.main-div{
-    height: 100vh;
-    width: 100vw;
+body{
+    background-image: url("/public/ss.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#navbar{
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction:row;
+    gap:1rem;
+    background-color: antiquewhite;
+    width: 100%;
     justify-content: center;
+    align-items: center;
+}
+.button{
+    padding: 1rem;
+    width: 8rem;
+    background-color: rgb(222, 139, 38);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: large;
+}
+
+#logo{
+    width: 3rem;
+    height: 3rem;
+}
+
+p{
+    font-weight: bold;
+    font-size: 2rem;
+    margin-right: 54rem;
+}
+#sec{
+    width: 90%;
 }

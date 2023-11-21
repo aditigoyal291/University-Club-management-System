@@ -1,51 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams, Link, useFetcher } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "./AddEdit.css";
 
 const initialState = {
-  Username: "",
-  Password: "",
-  Role: "",
+  MemberName: "",
+  SRN: "",
   ClubName: "",
-  ClubDepartment: "",
 };
 
-const AddEdit = () => {
-  const [state, setState] = useState(initialState);
-  const { ClubName, ClubDepartment, Username, Password, Role } = state;
+const Members = () => {
+  const [stateMember, setStateMember] = useState(initialState);
+  const { MemberName, SRN, ClubName } = stateMember;
+
+  //   const history = useHistory();
 
   useEffect(() => {
-    console.log(state);
-  }, [state]);
+    console.log(stateMember);
+  }, [stateMember]);
 
   const { id } = useParams();
   useEffect(() => {
     axios.get(`http://localhost:5000/api/get/${id}`).then((response) => {
-      console.log(response.data[0]);
-      setState({ ...response.data[0] });
+      setStateMember({ ...response.data[0] });
     });
   }, [id]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(Username, Password, Role);
-    if (!Username || !Password || !Role) {
+    const { MemberName, SRN, ClubName } = stateMember;
+
+    if (!MemberName || !SRN || !ClubName) {
       toast.error("Please fill in all fields");
+      return;
     } else {
       if (!id) {
         axios
-          .post("http://localhost:5000/api/post", state)
+          .post("http://localhost:5000/api/registermember", stateMember)
           .then((response) => {
             //   console.log(response);
             toast.success("User added successfully");
+            setStateMember({
+              MemberName: "",
+              SRN: "",
+
+              ClubName: "",
+            });
             // setState({ ...state, [name]: value });
           })
           .catch((err) => toast.error(err.response.data));
         //   setTimeout(() => {});
       } else {
         axios
-          .put(`http://localhost:5000/api/update/${id}`, state)
+          .put(`http://localhost:5000/api/update/${id}`, stateMember)
           .then((response) => {
             //   console.log(response);
             toast.success("User updated successfully");
@@ -60,45 +67,64 @@ const AddEdit = () => {
     const { name, value } = e.target;
     console.log("running");
     // console.log(name, value)
-    setState({ ...state, [name]: value });
+    // console.log(name, value)
+    setStateMember({ ...stateMember, [name]: value });
   };
 
   return (
-    <div id="outerdiv">
-    <h1 id="heading">SignUp</h1>
-      <h2>
-        Wanna catch up with the latest activities in college? We got you!!!
-      </h2>
-    <div id="cover">
-      <form id="form" onSubmit={handleSubmit}>
-        <label htmlFor="username"></label>
+    <div style={{ marginTop: "100px" }}>
+      <form
+        style={{
+          margin: "auto",
+          padding: "15px",
+          maxWidth: "400px",
+          alignContent: "center",
+        }}
+        onSubmit={handleSubmit}
+      >
+        <label htmlFor="MemberName">MemberName</label>
         <input
           type="text"
-          class="username"
-          name="Username"
-          placeholder="Enter name"
-          value={Username || ""}
+          id="MemberName"
+          name="MemberName"
+          placeholder="Enter Membr name"
+          value={MemberName || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="password"></label>
+        <label htmlFor="SRN">SRN</label>
         <input
           type="text"
-          class="password"
-          name="Password"
-          placeholder="Enter Password"
-          value={Password || ""}
+          id="SRN"
+          name="SRN"
+          placeholder="Enter SRN"
+          value={SRN || ""}
           onChange={handleInputChange}
         />
-        <label htmlFor="role"></label>
+        
+        <label htmlFor="ClubName">Club Name</label>
         <input
           type="text"
-          class="role"
-          name="Role"
-          placeholder="Enter Role"
-          value={Role || ""}
+          id="ClubName"
+          name="ClubName"
+          placeholder="Enter Club Name"
+          value={ClubName || ""}
           onChange={handleInputChange}
         />
-        {Role === "ClubHead" ? (
+
+        {/* <label htmlFor="ClubName">Club</label>
+        <select
+          name="ClubName"
+          id="ClubName"
+          value={stateEvent.ClubName}
+          onChange={handleInputChange}
+        >
+          <option value="">Select Club</option>
+          <option value="WEAL">WEAL</option>
+          <option value="NEXUS">NEXUS</option>
+          <option value="Shunya">Shunya</option>
+          <option value="Aikya">Aikya</option>
+        </select> */}
+        {/* {Role === "ClubHead" ? (
           <>
             <label htmlFor="ClubName">CLubName</label>
             <select
@@ -116,11 +142,10 @@ const AddEdit = () => {
           </>
         ) : Role === "Admin" ? (
           <>
-            <label htmlFor="ClubDepartment" style={{fontSize:"2rem"}}>Department</label>
+            <label htmlFor="ClubDepartment">Department</label>
             <select
               name="ClubDepartment"
               id="ClubDepartment"
-              style={{width:"22rem",padding:"1rem",borderRadius:"0.5rem"}}
               value={ClubDepartment}
               onChange={handleInputChange}
             >
@@ -128,17 +153,16 @@ const AddEdit = () => {
               <option value="Misc.">Misc.</option>
             </select>
           </>
-        ) : null}
+        ) : null} */}
         <br />
-        <input type="submit" class="button" value={id ? "Update" : "Save"} />
+        <input type="submit" value={id ? "Update" : "Save"} />
 
         <Link to="/">
-          <input type="button" class="button" value="Go back" />
+          <input type="button" value="Go back" />
         </Link>
       </form>
-    </div>
     </div>
   );
 };
 
-export default AddEdit;
+export default Members;

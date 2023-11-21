@@ -38,6 +38,8 @@ const Users = () => {
               <th style={{ textAlign: "center" }}>UserName</th>
               <th style={{ textAlign: "center" }}>Password</th>
               <th style={{ textAlign: "center" }}>Role</th>
+              <th style={{ textAlign: "center" }}>ClubName</th>
+              <th style={{ textAlign: "center" }}>ClubDepartment</th>
               <th style={{ textAlign: "center" }}>Action</th>
             </tr>
           </thead>
@@ -49,6 +51,8 @@ const Users = () => {
                   <td>{item.Username}</td>
                   <td>{item.Password}</td>
                   <td>{item.Role}</td>
+                  <td>{item.ClubName}</td>
+                  <td>{item.ClubDepartment}</td>
                   <td>
                     <Link to={`/update/${item.UserID}`}>
                       <button className="btn btn-edit">Edit</button>

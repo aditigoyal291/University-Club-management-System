@@ -18,10 +18,24 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json()
+      console.log(data)
+
       if (response.status === 200) {
         toast.success("Login successful");
+        
+        if (data.Role === "Admin") {
+          window.location.href = `/club?name=${data.Username}&pass=${data.Password}&role=${data.Role}&dept=${data.ClubDepartment}`;
+        } else {
+          window.location.href = `/club?name=${data.Username}&pass=${data.Password}&role=${data.Role}&clubname=${data.ClubName}`;
+        }
+
+
+
+
+
         // Use React Router history to navigate to the desired route
-        window.location.href = "/"; // Replace "/" with the route you want to navigate to
+        // window.location.href = "/"; // Replace "/" with the route you want to navigate to
       } else {
         alert("Login failed");
       }
@@ -42,7 +56,7 @@ const Login = () => {
           {/* <label for="username">Username:</label> */}
           <input
             type="text"
-            class="username"
+            className="username"
             name="username"
             placeholder="Username"
             value={username}
@@ -51,7 +65,7 @@ const Login = () => {
           ></input>
           <input
             type="password"
-            class="username"
+            className="username"
             name="password"
             placeholder="Password"
             value={password}
@@ -62,10 +76,9 @@ const Login = () => {
           <button id="button" onClick={handleLogin} type="submit">
             Login
           </button>
+          <h3 id="h3">Don't have an account? <Link to='/signup'>Sign Up</Link></h3>
         </form>
-  
-    <h3>Don't have an account? <Link to='/'>Sign Up</Link></h3>
-    </div>
+      </div>
     </div>
   );
 };
