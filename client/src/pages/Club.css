@@ -33,3 +33,37 @@
     font-weight: bold;
     margin: 2rem;
 }
+
+#cardsouter{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 2rem;
+    gap:3rem;
+    justify-content: center;
+    /* margin: 3rem; */
+    /* align-items: center; */
+    /* background-color: #de9126; */
+}
+
+#cards{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:white;
+    padding:2rem;
+    border:solid 0.5rem #de9126 ;
+    border-radius: 1rem;
+
+}
+
+.buttons{
+    padding: 1rem;
+    width: 8rem;
+    background-color: rgb(222, 139, 38);
+    color: #fff;
+    border: solid black 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: large;
+}

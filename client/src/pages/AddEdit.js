@@ -100,7 +100,7 @@ const AddEdit = () => {
         />
         {Role === "ClubHead" ? (
           <>
-            <label htmlFor="ClubName">CLubName</label>
+            <label htmlFor="ClubName">ClubName</label>
             <select
               name="ClubName"
               id="ClubName"
