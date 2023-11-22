@@ -195,7 +195,7 @@ app.post("/api/info", (req, res) => {
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubDepartment = c.Dept where u.Username=? and u.Password=?;";
     const sqlEvents =
       // "SELECT e.* FROM Events e JOIN Clubs c ON e.ClubName = c.ClubName WHERE c.Dept = ?;";
-    "SELECT e.* FROM Events e WHERE e.ClubName IN (SELECT c.ClubName FROM Clubs c WHERE c.Dept = ?)";
+      "SELECT e.* FROM Events e WHERE e.ClubName IN (SELECT c.ClubName FROM Clubs c WHERE c.Dept = ?)";
 
     db.query(sqlAdmin, [name, pass], (err, result) => {
       if (err) console.log(err);
@@ -236,7 +236,6 @@ app.post("/api/info", (req, res) => {
 });
 
 app.get("/api/adminClubInfo", (req, res) => {
-
   const sqlCount =
     "SELECT COUNT(DISTINCT c.ClubName) AS TotalDistinctClubs, COUNT(e.EventID) AS TotalEvents FROM Clubs c LEFT JOIN Events e ON c.ClubName = e.ClubName;";
 
@@ -321,7 +320,6 @@ BEGIN
     END IF;
 END;
 `;
-
 db.query(
   `DROP TRIGGER IF EXISTS enforce_role_assignment`,
   (dropErr, dropResult) => {
@@ -340,43 +338,35 @@ db.query(
   }
 );
 
-const createFunctionQuery = `
-
-
-CREATE FUNCTION CalculateTotalBudgetByEventName(EventName VARCHAR(255))
-RETURNS DECIMAL(10, 2)
-READS SQL DATA
-BEGIN
-    DECLARE total_budget DECIMAL(10, 2);
-
-    SELECT SUM(Budget) INTO total_budget
-    FROM Events
-    WHERE EventName = EventName;
-
-    RETURN total_budget;
-END;
-
-`;
-
-// Drop the existing function if it exists
-db.query(
-  `DROP FUNCTION IF EXISTS CalculateTotalBudgetByEventName;`,
-  (err, result) => {
-    if (err) {
-      console.error("Error dropping function:", err);
-    } else {
-      // Proceed to create the function after dropping (if it existed)
-      db.query(createFunctionQuery, (createErr, createResult) => {
-        if (createErr) {
-          console.error("Error creating function:", createErr);
-        } else {
-          console.log("Function created successfully");
-        }
-      });
-    }
-  }
-);
-
 app.listen(5000, () => {
+  const createFunctionQuery = `
+
+CREATE PROCEDURE GetEventsWithClubs(IN clubName VARCHAR(255))
+BEGIN
+  SELECT e.EventName, e.Venue, e.Date, e.Budget, e.PrizeMoney, c.ClubName
+  FROM Events e
+  INNER JOIN Clubs c ON e.ClubName = c.ClubName
+  WHERE c.ClubName = clubName;
+END ;
+  `;
+
+  app.get("/api/getFunction", (req, res) => {
+    // Drop the existing function if it exists
+    db.query(`DROP PROCEDURE IF EXISTS GetEventsWithClubs;`, (err, result) => {
+      if (err) {
+        console.error("Error dropping function:", err);
+      } else {
+        // Proceed to create the function after dropping (if it existed)
+        db.query(createFunctionQuery, (createErr, createResult) => {
+          if (createErr) {
+            console.error("Error creating function:", createErr);
+          } else {
+            console.log("Function created successfully");
+          }
+        });
+      }
+    });
+  });
+
   console.log("server is running");
 });

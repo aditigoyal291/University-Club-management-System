@@ -25,6 +25,18 @@ const Users = () => {
       }, 500);
     }
   };
+
+  const handleCreateProcedure = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/"
+      );
+      console.log(response.data); // Message from the backend
+    } catch (error) {
+      console.error("Error creating stored procedure:", error);
+    }
+  };
+
   return (
     <>
       <div style={{ marginTop: "150px" }}>
@@ -73,6 +85,8 @@ const Users = () => {
           </tbody>
         </table>
       </div>
+
+      <button onClick={handleCreateProcedure}>Create Procedure</button>
     </>
   );
 };

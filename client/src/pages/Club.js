@@ -258,6 +258,16 @@ function Club() {
               }}
               class="btn"
             >
+              Add Domain
+            </button>
+          )}
+          {Role === "ClubHead" && (
+            <button
+              onClick={() => {
+                setPage(5);
+              }}
+              class="btn"
+            >
               Add members
             </button>
           )}
@@ -457,8 +467,6 @@ function Club() {
         <br />
         {ClubName}
         <br />
-        {JSON.stringify(memberInfo)}
-        <button onClick={() => setPage(5)}>Add Members</button>
         {/* {JSON.stringify(stateMember)} */}
         <div style={{ marginTop: "100px" }}>
           <form
