@@ -208,14 +208,16 @@ app.post("/api/info", (req, res) => {
       if (err) console.log(err);
       else {
         clubInformation.clubEvents = result;
-        // console.log(clubInformation);
-        res.send(clubInformation);
+        console.log("clubinfo is", clubInformation.clubEvents);
+        // res.send(clubInformation);
       }
     });
   } else {
     const sqlHead =
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubName = c.ClubName where u.Username=? and u.Password=?;";
     const sqlEvents = "SELECT * FROM events WHERE ClubName =?;";
+    const sqlDomain = "SELECT * FROM domain WHERE ClubName =?;";
+    const sqlMembers="SELECT * FROM members WHERE ClubName =?;"
 
     db.query(sqlHead, [name, pass], (err, result) => {
       if (err) console.log(err);
@@ -228,6 +230,22 @@ app.post("/api/info", (req, res) => {
       if (err) console.log(err);
       else {
         clubInformation.clubEvents = result;
+        // console.log(clubInformation);
+    
+      }
+    });
+    db.query(sqlDomain, [clubname], (err, result) => {
+      if (err) console.log(err);
+      else {
+        clubInformation.clubInfo = result;
+        // console.log(clubInformation);
+        // res.send(clubInformation);
+      }
+    });
+    db.query(sqlMembers, [clubname], (err, result) => {
+      if (err) console.log(err);
+      else {
+        clubInformation.clubInfoMember = result;
         // console.log(clubInformation);
         res.send(clubInformation);
       }

@@ -15,6 +15,7 @@ function Club() {
   const [clubInfo, setClubInfo] = useState({
     clubInfo: [],
     clubEvents: [],
+    clubInfoMember: [],
   });
   const [page, setPage] = useState(1);
   const [eventInfo, setEventInfo] = useState({
@@ -147,7 +148,7 @@ function Club() {
     const { name, value } = e.target;
     console.log(name, value);
     console.log("running");
-    setStateDomain((prev) => ({ ...prev, [name]: value }));
+    setStateDomain((prev) => ({ ...stateDomain, [name]: value }));
   };
   useEffect(() => {
     console.log(stateDomain);
@@ -245,80 +246,95 @@ function Club() {
               <div class="depart">Department: {ClubDepartment}</div>
             )}
           </div>
-          <div style={{display:"flex",justifyContent:"center"}}>
-          {Role === "ClubHead" && (
-            <button onClick={() => setPage(2)} class="btn">
-              Add Event
-            </button>
-          )}
-          {Role === "ClubHead" && (
-            <button
-              onClick={() => {
-                setPage(4);
-              }}
-              class="btn"
-            >
-              Add Domain
-            </button>
-          )}
-          {Role === "ClubHead" && (
-            <button
-              onClick={() => {
-                setPage(5);
-              }}
-              class="btn"
-            >
-              Add members
-            </button>
-          )}
-          {Role === "ClubHead" && (
-            <button onClick={() => setPage(4)} class="btn">
-              Add Domain
-            </button>
-          )}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {Role === "ClubHead" && (
+              <button onClick={() => setPage(2)} class="btn">
+                Add Event
+              </button>
+            )}
+            {Role === "ClubHead" && (
+              <button
+                onClick={() => {
+                  setPage(4);
+                }}
+                class="btn"
+              >
+                Add Domain
+              </button>
+            )}
+            {Role === "ClubHead" && (
+              <button
+                onClick={() => {
+                  setPage(5);
+                }}
+                class="btn"
+              >
+                Add members
+              </button>
+            )}
           </div>
           <br></br>
-          {/* {JSON.stringify(clubInfo)} */}
-          {/* {JSON.stringify(clubInfo)} */}
+
           <div id="cardsouter">
-          {clubInfo.clubEvents.map((item) => (
-            <>
-            <div id="cards">
-              <div style={{fontWeight:"bold",fontSize:"4rem"}}>{item.ClubName}</div>
-              <br />
-              <div style={{fontWeight:"bold",fontSize:"1.5rem"}}>Event Name: {item.EventName}</div>
-              <br />
-              <div style={{fontWeight:"bold",fontSize:"1.5rem"}}>Venue: {item.Venue}</div>
-              <br />
-              <div style={{fontWeight:"bold",fontSize:"1.5rem"}}>Budget: {item.Budget}</div>
-              <br />
-              <div style={{fontWeight:"bold",fontSize:"1.5rem"}}>Budget: {item.PrizeMoney}</div>
-              <br/>
+            {clubInfo.clubEvents.map((item) => (
+              <>
+                <div id="cards">
+                  <div style={{ fontWeight: "bold", fontSize: "4rem" }}>
+                    {item.ClubName}
+                  </div>
+                  <br />
+                  <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+                    Event Name: {item.EventName}
+                  </div>
+                  <br />
+                  <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+                    Venue: {item.Venue}
+                  </div>
+                  <br />
+                  <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+                    Budget: {item.Budget}
+                  </div>
+                  <br />
+                  <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+                    Prize Money: {item.PrizeMoney}
+                  </div>
 
-            <div>
-              {Role !== "Admin" && (
-                <button onClick={() => handleEventEdit(item)}  class="buttons">
-                  Edit Event
-                </button>
-              )}
-            </div>
-            </div>
+                  <br />
+
+                  <div>
+                    {Role !== "Admin" && (
+                      <button
+                        onClick={() => handleEventEdit(item)}
+                        class="buttons"
+                      >
+                        Edit Event
+                      </button>
+                    )}
+                  </div>
+                </div>
               </>
-
-          ))}
+            ))}
           </div>
-          {/* {JSON.stringify(clubInfo.clubEvents)} */}
-
-          {/* {Role === "Admin" && (
-            <>
-              {clubInfo.clubInfo.map((club) => (
-                <>
-                {JSON.stringify(club)}
-                </>
-              ))}
-            </>
-          )} */}
-          <></>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "2rem" }}
+          >
+            <button
+              onClick={() => {
+                setPage(6);
+              }}
+              className="buttons"
+            >
+              Domains
+            </button>
+            <button
+              onClick={() => {
+                setPage(7);
+              }}
+              className="buttons"
+            >
+              Members
+            </button>
+          </div>
         </div>
       </>
     );
@@ -326,20 +342,35 @@ function Club() {
     return (
       <>
         {/* Page 2: Events Page */}
-        <div style={{ marginTop: "100px", display:"flex",flexDirection:"column"}}>
+        <div
+          style={{
+            marginTop: "100px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <form
             style={{
-              display:"flex",
-              flexDirection:"column",
+              display: "flex",
+              flexDirection: "column",
               margin: "auto",
               padding: "15px",
               maxWidth: "40rem",
               alignContent: "center",
-
             }}
             onSubmit={handleEventSubmit}
           >
-            <label htmlFor="EventName" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>EventName</label>
+            <label
+              htmlFor="EventName"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              EventName
+            </label>
             <input
               type="text"
               id="EventName"
@@ -347,9 +378,23 @@ function Club() {
               placeholder="Enter event name"
               value={eventInfo.EventName || ""}
               onChange={handleEventInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
-            <label htmlFor="Venue" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>Venue</label>
+            <label
+              htmlFor="Venue"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Venue
+            </label>
             <input
               type="text"
               id="Venue"
@@ -357,9 +402,23 @@ function Club() {
               placeholder="Enter Venue"
               value={eventInfo.Venue || ""}
               onChange={handleEventInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
-            <label htmlFor="Date1" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>Date</label>
+            <label
+              htmlFor="Date1"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Date
+            </label>
             <input
               type="date"
               id="Date1"
@@ -367,10 +426,23 @@ function Club() {
               placeholder="Enter Date"
               value={eventInfo.Date1 || ""}
               onChange={handleEventInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
-
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
-            <label htmlFor="Budget" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>Budget</label>
+            <label
+              htmlFor="Budget"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Budget
+            </label>
             <input
               type="number"
               id="Budget"
@@ -378,11 +450,24 @@ function Club() {
               placeholder="Enter Budget"
               value={eventInfo.Budget || ""}
               onChange={handleEventInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
-
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
 
-            <label htmlFor="PrizeMoney" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>PrizeMoney</label>
+            <label
+              htmlFor="PrizeMoney"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              PrizeMoney
+            </label>
             <input
               type="number"
               id="PrizeMoney"
@@ -390,12 +475,24 @@ function Club() {
               placeholder="Enter PrizeMoney"
               value={eventInfo.PrizeMoney || ""}
               onChange={handleEventInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
-            <div style={{display:"flex",justifyContent:"space-between",marginTop:"1rem"}}>
-            <input type="submit" value={"Save"} class="buttons" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "1rem",
+              }}
+            >
+              <input type="submit" value={"Save"} class="buttons" />
 
-            <button onClick={() => setPage(1)} class="buttons">Go Back</button>
+              <button onClick={() => setPage(1)} class="buttons">
+                Go Back
+              </button>
             </div>
           </form>
         </div>
@@ -495,12 +592,22 @@ function Club() {
               padding: "15px",
               maxWidth: "400px",
               alignContent: "center",
-              display:"flex",
-              flexDirection:"column",
+              display: "flex",
+              flexDirection: "column",
             }}
             onSubmit={handleDomainSubmit}
           >
-            <label htmlFor="DomainName" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>DomainName</label>
+            <label
+              htmlFor="DomainName"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              DomainName
+            </label>
             <input
               type="text"
               id="DomainName"
@@ -508,11 +615,24 @@ function Club() {
               placeholder="Enter Domain name"
               value={stateDomain.DomainName || ""}
               onChange={handleInputDomainChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
-
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
             <br />
-            <label htmlFor="ClubName" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>Club Name</label>
+            <label
+              htmlFor="ClubName"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Club Name
+            </label>
             <input
               type="text"
               id="ClubName"
@@ -521,13 +641,25 @@ function Club() {
               placeholder="Enter Club Name"
               value={stateDomain.ClubName}
               onChange={handleInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
-
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
             <br />
-            <div style={{display:"flex",padding:"2rem",gap:"2rem",marginTop:"1rem"}} >
-            <input type="submit" value={"Save"} class="buttons"/>
-            <button onClick={() => setPage(1)} class="buttons">Go back</button>
+            <div
+              style={{
+                display: "flex",
+                padding: "2rem",
+                gap: "2rem",
+                marginTop: "1rem",
+              }}
+            >
+              <input type="submit" value={"Save"} class="buttons" />
+              <button onClick={() => setPage(1)} class="buttons">
+                Go back
+              </button>
             </div>
           </form>
         </div>
@@ -540,17 +672,26 @@ function Club() {
         <div style={{ marginTop: "100px" }}>
           <form
             style={{
-              display:"flex",
-              flexDirection:"column",
+              display: "flex",
+              flexDirection: "column",
               margin: "auto",
               padding: "15px",
               maxWidth: "400px",
               alignContent: "center",
-
             }}
             onSubmit={handleMemberSubmit}
           >
-            <label htmlFor="MemberName" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>MemberName</label>
+            <label
+              htmlFor="MemberName"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              MemberName
+            </label>
             <input
               type="text"
               id="MemberName"
@@ -558,9 +699,23 @@ function Club() {
               placeholder="Enter Membr name"
               value={stateMember.MemberName || ""}
               onChange={handleInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
-            <label htmlFor="SRN" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>SRN</label>
+            <label
+              htmlFor="SRN"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              SRN
+            </label>
             <input
               type="text"
               id="SRN"
@@ -568,10 +723,24 @@ function Club() {
               placeholder="Enter SRN"
               value={stateMember.SRN || ""}
               onChange={handleInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
 
-            <label htmlFor="ClubName" style={{fontSize:"1.5rem",paddingBottom:"0.5rem",paddingTop:"0.5rem",fontWeight:"bold"}}>Club Name</label>
+            <label
+              htmlFor="ClubName"
+              style={{
+                fontSize: "1.5rem",
+                paddingBottom: "0.5rem",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Club Name
+            </label>
             <input
               type="text"
               id="ClubName"
@@ -580,16 +749,62 @@ function Club() {
               placeholder="Enter Club Name"
               value={stateMember.ClubName}
               onChange={handleInputChange}
-              style={{padding:"1rem",width:"20rem",borderRadius:"0.5rem"}}
+              style={{
+                padding: "1rem",
+                width: "20rem",
+                borderRadius: "0.5rem",
+              }}
             />
 
             <br />
-            <div style={{display:"flex",padding:"2rem",gap:"2rem",marginTop:"1rem"}} >
-            <input type="submit" value={"Save"} class="buttons"/>
-            <button onClick={() => setPage(1)} class="buttons">Go back</button>
+            <div
+              style={{
+                display: "flex",
+                padding: "2rem",
+                gap: "2rem",
+                marginTop: "1rem",
+              }}
+            >
+              <input type="submit" value={"Save"} class="buttons" />
+              <button onClick={() => setPage(1)} class="buttons">
+                Go back
+              </button>
             </div>
           </form>
         </div>
+      </>
+    );
+  } else if (page === 6) {
+    return (
+      <>
+        <div className="domain-info">
+          {clubInfo.clubInfo.map((items) => (
+            <>
+              {/* <div key={items.DomainName}>{items.DomainName}</div> */}
+              <ul>
+                <li>{items.DomainName}</li>
+                {/* <li>{items.SRN}</li> */}
+              </ul>
+            </>
+          ))}
+        </div>
+      </>
+    );
+  } else if (page === 7) {
+    return (
+      <>
+        {clubInfo.clubInfoMember.map((items) => (
+          <>
+            <div >
+              <ul className="domain-info">
+                <li>{items.MemberName}</li>
+                <li>{items.SRN}</li>
+              </ul>
+              <br />
+            </div>
+            {/* </div> */}
+          </>
+        ))}
       </>
     );
   }
