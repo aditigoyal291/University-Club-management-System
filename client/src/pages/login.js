@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./login.css";
 import { toast } from "react-toastify";
-import axios from "axios";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -15,7 +15,7 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password }), //body receives data in json format from req.body 
       });
 
       const data = await response.json()
@@ -29,13 +29,6 @@ const Login = () => {
         } else {
           window.location.href = `/club?name=${data.Username}&pass=${data.Password}&role=${data.Role}&clubname=${data.ClubName}`;
         }
-
-
-
-
-
-        // Use React Router history to navigate to the desired route
-        // window.location.href = "/"; // Replace "/" with the route you want to navigate to
       } else {
         alert("Login failed");
       }

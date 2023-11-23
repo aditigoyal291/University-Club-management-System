@@ -15,11 +15,9 @@ const initialState = {
 const AddEdit = () => {
   const [state, setState] = useState(initialState);
   const { ClubName, ClubDepartment, Username, Password, Role } = state;
-
   useEffect(() => {
     console.log(state);
   }, [state]);
-
   const { id } = useParams();
   useEffect(() => {
     axios.get(`http://localhost:5000/api/get/${id}`).then((response) => {
@@ -28,7 +26,7 @@ const AddEdit = () => {
     });
   }, [id]);
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     console.log(Username, Password, Role);
     if (!Username || !Password || !Role) {
       toast.error("Please fill in all fields");

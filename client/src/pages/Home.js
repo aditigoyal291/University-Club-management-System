@@ -50,7 +50,7 @@ const Home = () => {
         
           {clubEventInfo && (
             <>
-              <p style={{backgroundColor:"green"}}>Total Distinct Clubs: {clubEventInfo[0].TotalDistinctClubs}</p>
+              <p>Total Distinct Clubs: {clubEventInfo[0].TotalDistinctClubs}</p>
               <p>Total Events: {clubEventInfo[0].TotalEvents}</p>
             </>
           )}

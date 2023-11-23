@@ -26,7 +26,6 @@ app.get("/api/get", (req, res) => {
 
 app.post("/api/post", async (req, res) => {
   let { Username, Password, Role, ClubName, ClubDepartment } = await req.body;
-
   Role === "Admin" ? (ClubName = null) : (ClubDepartment = null);
   const UserID = uuidv4();
 
@@ -57,7 +56,6 @@ app.post("/api/registerEvent", (req, res) => {
   console.log(req.body);
   const { ClubName, EventName, Venue, Date1, Budget, PrizeMoney } = req.body;
 
-  // Generate a unique EventID using UUID
   const EventID = uuidv4();
 
   const sqlEvent = `
@@ -183,33 +181,33 @@ app.put("/api/updateEvent", (req, res) => {
 
 app.post("/api/info", (req, res) => {
   const { name, pass, role, dept, clubname } = req.body;
-  console.log(name, pass, role, dept, clubname);
+  console.log("Name",name, pass, role, dept, clubname);
 
   let clubInformation = {
     clubInfo: [],
     clubEvents: [],
+    clubInfoMember: [],
   };
 
   if (role === "Admin") {
     const sqlAdmin =
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubDepartment = c.Dept where u.Username=? and u.Password=?;";
     const sqlEvents =
-      // "SELECT e.* FROM Events e JOIN Clubs c ON e.ClubName = c.ClubName WHERE c.Dept = ?;";
       "SELECT e.* FROM Events e WHERE e.ClubName IN (SELECT c.ClubName FROM Clubs c WHERE c.Dept = ?)";
 
     db.query(sqlAdmin, [name, pass], (err, result) => {
       if (err) console.log(err);
       else {
         clubInformation.clubInfo = result;
-        console.log(result);
+        console.log("Result",clubInformation);
       }
     });
     db.query(sqlEvents, [dept], (err, result) => {
       if (err) console.log(err);
       else {
         clubInformation.clubEvents = result;
-        console.log("clubinfo is", clubInformation.clubEvents);
-        // res.send(clubInformation);
+        // console.log("clubinfo is", clubInformation.clubEvents);
+        res.send(clubInformation);
       }
     });
   } else {
@@ -217,7 +215,7 @@ app.post("/api/info", (req, res) => {
       "SELECT c.*, u.* FROM users u JOIN clubs c ON u.ClubName = c.ClubName where u.Username=? and u.Password=?;";
     const sqlEvents = "SELECT * FROM events WHERE ClubName =?;";
     const sqlDomain = "SELECT * FROM domain WHERE ClubName =?;";
-    const sqlMembers="SELECT * FROM members WHERE ClubName =?;"
+    const sqlMembers = "SELECT * FROM members WHERE ClubName =?;";
 
     db.query(sqlHead, [name, pass], (err, result) => {
       if (err) console.log(err);
@@ -231,7 +229,6 @@ app.post("/api/info", (req, res) => {
       else {
         clubInformation.clubEvents = result;
         // console.log(clubInformation);
-    
       }
     });
     db.query(sqlDomain, [clubname], (err, result) => {
@@ -239,7 +236,7 @@ app.post("/api/info", (req, res) => {
       else {
         clubInformation.clubInfo = result;
         // console.log(clubInformation);
-        // res.send(clubInformation);
+          
       }
     });
     db.query(sqlMembers, [clubname], (err, result) => {

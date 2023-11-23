@@ -62,17 +62,38 @@ function Club() {
     const getInfo = async () => {
       //   console.log("i am running");
       // console.log(MemberName, SRN, ClubName);
-      axios
-        .post("http://localhost:5000/api/info", {
-          name: stateMember.MemberName,
-          pass: stateMember.SRN,
-          clubname: stateMember.ClubName,
-        })
-        .then((response) => {
-          setClubInfo(response.data);
-          console.log(response);
-        })
-        .catch((err) => console.log(err.response.data));
+      // axios
+      //   .post("http://localhost:5000/api/info", {
+      //     name: stateMember.MemberName,
+      //     pass: stateMember.SRN,
+      //     clubname: stateMember.ClubName,
+      //   })
+      //   .then((response) => {
+      //     setClubInfo(response.data);
+      //     console.log(response);
+      //   })
+      // .catch((err) => console.log(err.response.data));
+
+      try {
+        const response = await fetch("http://localhost:5000/api/info", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: Name,
+            pass: Pass,
+            clubname: ClubName,
+            dept: ClubDepartment,
+            role: Role,
+          }), //body receives data in json format from req.body
+        });
+        const data = await response.json();
+        console.log(data);
+        setClubInfo(data);
+      } catch (error) {
+        console.error("Error during login:", error);
+      }
     };
     getInfo();
   }, []);
@@ -229,23 +250,14 @@ function Club() {
     return (
       <>
         <div>
-          {/* {Role==='ClubHead' &&
-          <button
-          onClick={() => {
-            setPage(4);
-          }}
-          >
-            {ClubName}
-          </button>
-          } */}
           <div class="navbar">
-            {/* <div>{ClubDepartment}</div> */}
             <div id="namae">Hi, {Name}</div>
             {Role === "ClubHead" && <div class="depart">Club: {ClubName}</div>}
             {Role === "Admin" && (
               <div class="depart">Department: {ClubDepartment}</div>
             )}
           </div>
+          {/* {JSON.stringify(clubInfo)}c */}
           <div style={{ display: "flex", justifyContent: "center" }}>
             {Role === "ClubHead" && (
               <button onClick={() => setPage(2)} class="btn">
@@ -298,7 +310,6 @@ function Club() {
                   <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
                     Prize Money: {item.PrizeMoney}
                   </div>
-
                   <br />
 
                   <div>
@@ -498,83 +509,6 @@ function Club() {
         </div>
       </>
     );
-  } else if (page === 3) {
-    return (
-      <>
-        page 3
-        <div style={{ marginTop: "100px" }}>
-          <form
-            style={{
-              margin: "auto",
-              padding: "15px",
-              maxWidth: "400px",
-              alignContent: "center",
-            }}
-          >
-            <label htmlFor="EventName">EventName</label>
-            <input
-              type="text"
-              id="EventName"
-              name="EventName"
-              placeholder="Enter event name"
-              disabled
-              value={eventInfo.EventName || ""}
-              onChange={handleEventInputChange}
-            />
-            <label htmlFor="Venue">Venue</label>
-            <input
-              type="text"
-              id="Venue"
-              name="Venue"
-              placeholder="Enter Venue"
-              value={eventInfo.Venue || ""}
-              onChange={handleEventInputChange}
-            />
-            <label htmlFor="Date1">Date</label>
-            <input
-              type="date"
-              id="Date1"
-              name="Date1"
-              placeholder="Enter Date"
-              value={eventInfo.Date1 || ""}
-              onChange={handleEventInputChange}
-            />
-            <label htmlFor="Budget">Budget</label>
-            <input
-              type="number"
-              id="Budget"
-              name="Budget"
-              placeholder="Enter Budget"
-              value={eventInfo.Budget || ""}
-              onChange={handleEventInputChange}
-            />
-
-            <label htmlFor="PrizeMoney">PrizeMoney</label>
-            <input
-              type="number"
-              id="PrizeMoney"
-              name="PrizeMoney"
-              placeholder="Enter PrizeMoney"
-              value={eventInfo.PrizeMoney || ""}
-              onChange={handleEventInputChange}
-            />
-
-            <button
-              type="button"
-              onClick={() => {
-                handleEventUpdate(eventInfo);
-              }}
-            >
-              Update
-            </button>
-
-            <button type="button" onClick={() => setPage(1)}>
-              Go Back
-            </button>
-          </form>
-        </div>
-      </>
-    );
   } else if (page === 4) {
     return (
       <>
@@ -668,7 +602,7 @@ function Club() {
   } else if (page === 5) {
     return (
       <>
-        {/* page 5 */}
+        {/*  Add Members*/}
         <div style={{ marginTop: "100px" }}>
           <form
             style={{
@@ -748,7 +682,7 @@ function Club() {
               name="ClubName"
               placeholder="Enter Club Name"
               value={stateMember.ClubName}
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               style={{
                 padding: "1rem",
                 width: "20rem",
@@ -795,7 +729,7 @@ function Club() {
       <>
         {clubInfo.clubInfoMember.map((items) => (
           <>
-            <div >
+            <div>
               <ul className="domain-info">
                 <li>{items.MemberName}</li>
                 <li>{items.SRN}</li>
